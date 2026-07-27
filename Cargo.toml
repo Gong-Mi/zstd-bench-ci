@@ -11,3 +11,11 @@ rand = { version = "0.8", features = ["small_rng"] }
 [profile.release]
 lto = "thin"
 codegen-units = 1
+
+[[bin]]
+name = "zstd-bench-ci"
+path = "src/main.rs"
+
+[[bin]]
+name = "correctness"
+path = "src/correctness.rs"

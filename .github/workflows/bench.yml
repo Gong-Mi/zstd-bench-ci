@@ -7,7 +7,26 @@ on:
   workflow_dispatch:
 
 jobs:
+  correctness:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+      - name: Cache cargo
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            target
+          key: ${{ runner.os }}-correctness-${{ hashFiles('Cargo.lock') }}
+      - name: Build
+        run: cargo build --release --bin correctness
+      - name: Run correctness tests
+        run: cargo run --release --bin correctness
+
   bench:
+    needs: correctness
     strategy:
       matrix:
         os: [ubuntu-latest, ubuntu-24.04-arm]
@@ -15,10 +34,8 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
-
       - name: Install Rust
         uses: dtolnay/rust-toolchain@stable
-
       - name: Cache cargo
         uses: actions/cache@v4
         with:
@@ -27,19 +44,15 @@ jobs:
             ~/.cargo/git
             target
           key: ${{ runner.os }}-${{ matrix.asm }}-bench-${{ hashFiles('Cargo.lock') }}
-
       - name: Build (with ASM)
         if: matrix.asm == 'with-asm'
-        run: cargo build --release
-
+        run: cargo build --release --bin zstd-bench-ci
       - name: Build (no ASM, no BMI2)
         if: matrix.asm == 'no-asm'
-        run: cargo build --release
+        run: cargo build --release --bin zstd-bench-ci
         env:
           CFLAGS: "-DZSTD_DISABLE_ASM -DDYNAMIC_BMI2=0"
-
       - name: Run benchmark (16MB, 7 iterations)
-        run: cargo run --release -- 16777216 7
-
+        run: cargo run --release --bin zstd-bench-ci -- 16777216 7
       - name: Run benchmark (64MB, 5 iterations)
-        run: cargo run --release -- 67108864 5
+        run: cargo run --release --bin zstd-bench-ci -- 67108864 5
