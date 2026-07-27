@@ -69,14 +69,13 @@ fn bench_pair(name: &str, data: &[u8], level: i32, iterations: u32) -> (BenchRes
     }
 
     let mut rs_compressed = Vec::new();
-    ruzstd::encoding::compress(data, &mut rs_compressed, ruzstd::encoding::CompressionLevel::Fastest)
-        .expect("Rust compress");
+    ruzstd::encoding::compress(data, &mut rs_compressed, ruzstd::encoding::CompressionLevel::Fastest);
     let mut best_rs_comp = f64::MAX;
     let mut best_rs_decomp = f64::MAX;
     for _ in 0..iterations {
         let t = Instant::now();
         let mut out = Vec::new();
-        ruzstd::encoding::compress(data, &mut out, ruzstd::encoding::CompressionLevel::Fastest).unwrap();
+        ruzstd::encoding::compress(data, &mut out, ruzstd::encoding::CompressionLevel::Fastest);
         best_rs_comp = best_rs_comp.min(t.elapsed().as_secs_f64());
         let t = Instant::now();
         let mut dec = ruzstd::decoding::FrameDecoder::new();
