@@ -11,6 +11,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, ubuntu-24.04-arm]
+        asm: ["with-asm", "no-asm"]
     runs-on: ${{ matrix.os }}
     steps:
       - uses: actions/checkout@v4
@@ -25,10 +26,17 @@ jobs:
             ~/.cargo/registry
             ~/.cargo/git
             target
-          key: ${{ runner.os }}-bench-${{ hashFiles('Cargo.lock') }}
+          key: ${{ runner.os }}-${{ matrix.asm }}-bench-${{ hashFiles('Cargo.lock') }}
 
-      - name: Build
+      - name: Build (with ASM)
+        if: matrix.asm == 'with-asm'
         run: cargo build --release
+
+      - name: Build (no ASM, no BMI2)
+        if: matrix.asm == 'no-asm'
+        run: cargo build --release
+        env:
+          CFLAGS: "-DZSTD_DISABLE_ASM -DDYNAMIC_BMI2=0"
 
       - name: Run benchmark (16MB, 7 iterations)
         run: cargo run --release -- 16777216 7
