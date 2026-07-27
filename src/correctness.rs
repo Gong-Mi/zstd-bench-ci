@@ -93,7 +93,7 @@ fn main() {
                 let mut dec = ruzstd::decoding::FrameDecoder::new();
                 let mut out = vec![0u8; data.len()];
                 match dec.decode_all(&c_compressed, &mut out) {
-                    Ok(()) => {
+                    Ok(_) => {
                         if &out[..] == &data[..] {
                             passes += 1;
                         } else {
@@ -155,7 +155,7 @@ fn main() {
                 let mut dec = ruzstd::decoding::FrameDecoder::new();
                 let mut out = vec![0u8; data.len()];
                 match dec.decode_all(&c_compressed, &mut out) {
-                    Ok(()) => {
+                    Ok(_) => {
                         if &out[..] == &data[..] {
                             passes += 1;
                         } else {
@@ -177,7 +177,7 @@ fn main() {
                 let mut dec = ruzstd::decoding::FrameDecoder::new();
                 let mut out = vec![0u8; data.len()];
                 match dec.decode_all(&rs_compressed, &mut out) {
-                    Ok(()) => {
+                    Ok(_) => {
                         if &out[..] == &data[..] {
                             passes += 1;
                         } else {
