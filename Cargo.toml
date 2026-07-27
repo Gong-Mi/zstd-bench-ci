@@ -1,0 +1,13 @@
+[package]
+name = "zstd-bench-ci"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+ruzstd = { git = "https://github.com/KillingSpark/zstd-rs.git" }
+zstd = "0.13"
+rand = { version = "0.8", features = ["small_rng"] }
+
+[profile.release]
+lto = "thin"
+codegen-units = 1
