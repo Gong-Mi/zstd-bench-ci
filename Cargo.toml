@@ -4,7 +4,7 @@ version = "0.1.0"
 edition = "2021"
 
 [dependencies]
-ruzstd = { git = "https://github.com/KillingSpark/zstd-rs.git" }
+ruzstd = { git = "https://github.com/Gong-Mi/zstd-rs.git", branch = "perf-early-raw-escape" }
 zstd = "0.13"
 rand = { version = "0.8", features = ["small_rng"] }
 
