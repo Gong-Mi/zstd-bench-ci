@@ -79,7 +79,7 @@ fn bench_pair(name: &str, data: &[u8], level: i32, iterations: u32) -> (BenchRes
         best_rs_comp = best_rs_comp.min(t.elapsed().as_secs_f64());
         let t = Instant::now();
         let mut dec = ruzstd::decoding::FrameDecoder::new();
-        let mut out = Vec::with_capacity(data.len());
+        let mut out = vec![0u8; data.len()];
         dec.decode_all(&c_compressed, &mut out).unwrap();
         best_rs_decomp = best_rs_decomp.min(t.elapsed().as_secs_f64());
     }
